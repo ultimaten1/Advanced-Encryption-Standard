@@ -76,7 +76,7 @@ namespace Group7_Module2.Service
         public static string PadPlaintext(string plaintext)
         {
             int paddingLength = 16 - (plaintext.Length % 16); // Tính toán số lượng kí tự cần thêm vào
-            string paddedPlaintext = plaintext.PadRight(plaintext.Length + paddingLength, 'x'); // Thêm kí tự "x" vào cuối chuỗi
+            string paddedPlaintext = plaintext.PadRight(plaintext.Length + paddingLength, ' '); // Thêm kí tự "x" vào cuối chuỗi
             return paddedPlaintext;
         }
 

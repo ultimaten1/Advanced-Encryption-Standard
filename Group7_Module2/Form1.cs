@@ -25,7 +25,8 @@ namespace Group7_Module2
         private void btnEncrypt_Click(object sender, EventArgs e)
         {
             string plainText = txtInputText.Text;
-            plainText = AES.PadPlaintext(plainText);
+            plainText = AES.PadPlaintext(plainText);           
+            plainText.Trim();
 
             byte[] key = Encoding.ASCII.GetBytes(_generatedKey);
 
