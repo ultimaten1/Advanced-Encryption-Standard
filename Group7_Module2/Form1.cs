@@ -31,7 +31,7 @@ namespace Group7_Module2
             byte[] key = Encoding.ASCII.GetBytes(_generatedKey);
 
             byte[] input = Encoding.ASCII.GetBytes(plainText);
-            encrypted = AES.Encrypt(input, key);
+            encrypted = AES.EncryptText(input, key);
 
             // Chuyển đổi decrypted thành chuỗi plaintext
             string encryptedPlaintext = Encoding.ASCII.GetString(encrypted);
@@ -43,7 +43,7 @@ namespace Group7_Module2
         {
             byte[] key = Encoding.ASCII.GetBytes(_generatedKey);
 
-            decrypted = AES.Decrypt(encrypted, key);
+            decrypted = AES.DecryptText(encrypted, key);
 
             // Chuyển đổi decrypted thành chuỗi plaintext
             string decryptedPlaintext = Encoding.ASCII.GetString(decrypted);

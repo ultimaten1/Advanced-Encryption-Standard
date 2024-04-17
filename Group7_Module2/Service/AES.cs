@@ -117,7 +117,54 @@ namespace Group7_Module2.Service
             return key;
         }
 
-        public static byte[] Encrypt(byte[] input, byte[] key)
+        public static byte[] EncryptText(byte[] input, byte[] key)
+        {
+            int numBlocks = (int)Math.Ceiling((double)input.Length / 16);
+            List<byte> encryptedBlocks = new List<byte>();
+
+            for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
+            {
+                int startIndex = blockIndex * 16;
+                int length = Math.Min(16, input.Length - startIndex);
+                byte[] block = new byte[16];
+                Array.Copy(input, startIndex, block, 0, length);
+
+                byte[] encryptedBlock = EncryptBlock(block, key);
+                encryptedBlocks.AddRange(encryptedBlock);
+            }
+
+            return encryptedBlocks.ToArray();
+        }
+
+        public static byte[] DecryptText(byte[] input, byte[] key)
+        {
+            int numBlocks = input.Length / 16;
+            List<byte> decryptedBlocks = new List<byte>();
+
+            for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
+            {
+                int startIndex = blockIndex * 16;
+                byte[] block = new byte[16];
+                Array.Copy(input, startIndex, block, 0, 16);
+
+                byte[] decryptedBlock = DecryptBlock(block, key);
+                decryptedBlocks.AddRange(decryptedBlock);
+            }
+
+            return decryptedBlocks.ToArray();
+        }
+
+        private static byte[] EncryptBlock(byte[] block, byte[] key)
+        {
+            return Encrypt(block, key);
+        }
+
+        private static byte[] DecryptBlock(byte[] block, byte[] key)
+        {
+            return Decrypt(block, key);
+        }
+
+        static byte[] Encrypt(byte[] input, byte[] key)
         {
             byte[,] state = new byte[4, 4];
             byte[,] expandedKey = KeyExpansion(key);
@@ -159,7 +206,7 @@ namespace Group7_Module2.Service
             return output;
         }
 
-        public static byte[] Decrypt(byte[] input, byte[] key)
+        static byte[] Decrypt(byte[] input, byte[] key)
         {
             byte[,] state = new byte[4, 4];
             byte[,] expandedKey = KeyExpansion(key);
