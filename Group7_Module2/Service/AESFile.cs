@@ -1,26 +1,39 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Group7_Module2.Service
 {
     public class AESFile
     {
+        public static string filePathExtension = null;
+
         public static void EncryptFileStructure(string filePath, byte[] key)
         {
             try
             {
-                string directoryPath = "./Files";
+                filePathExtension = Path.GetExtension(filePath);
+                string encryptedFilePath = Path.Combine(Path.GetFileNameWithoutExtension(filePath) + "_encrypted" + filePathExtension);
 
-                string encryptedFilePath = Path.Combine(Path.GetFileName(filePath) + ".encrypted");
+                // Đọc dữ liệu từ file
+                byte[] fileData = File.ReadAllBytes(filePath);
 
-                // Create encrypted copy of file structure
-                File.Copy(filePath, encryptedFilePath);
+                // Tìm độ dài của phần header (ví dụ: 100 bytes)
+                int headerLength = 100; // Bạn cần xác định phần này
 
-                // Encrypt the encrypted file structure
-                byte[] encryptedData = File.ReadAllBytes(encryptedFilePath);
-                byte[] encryptedResult = AES.EncryptText(encryptedData, key);
-                File.WriteAllBytes(encryptedFilePath, encryptedResult);
+                // Tách phần header ra khỏi dữ liệu
+                byte[] headerData = fileData.Take(headerLength).ToArray();
+                byte[] bodyAndFooterData = fileData.Skip(headerLength).ToArray();
+
+                // Mã hóa phần header
+                byte[] encryptedHeader = AES.EncryptFile(headerData, key);
+
+                // Kết hợp phần header đã mã hóa với phần body và footer
+                byte[] combinedData = encryptedHeader.Concat(bodyAndFooterData).ToArray();
+
+                // Ghi dữ liệu đã mã hóa vào file
+                File.WriteAllBytes(encryptedFilePath, combinedData);
 
                 MessageBox.Show("File structure encrypted successfully.");
             }
@@ -34,17 +47,34 @@ namespace Group7_Module2.Service
         {
             try
             {
-                string directoryPath = "./Files";
+                string decryptedFilePath = Path.GetFileNameWithoutExtension(filePath);
 
-                string decryptedFilePath = Path.Combine(Path.GetFileNameWithoutExtension(filePath));
+                if (decryptedFilePath.EndsWith("_encrypted"))
+                {
+                    decryptedFilePath = decryptedFilePath.Substring(0, decryptedFilePath.Length - 10);
+                    decryptedFilePath = decryptedFilePath + "_decrypted";
+                }
 
-                // Create decrypted copy of file structure
-                File.Copy(filePath, decryptedFilePath);
+                decryptedFilePath = decryptedFilePath + filePathExtension;
 
-                // Decrypt the decrypted file structure
-                byte[] decryptedData = File.ReadAllBytes(decryptedFilePath);
-                byte[] decryptedResult = AES.DecryptText(decryptedData, key);
-                File.WriteAllBytes(decryptedFilePath, decryptedResult);
+                // Đọc dữ liệu từ file đã mã hóa
+                byte[] fileData = File.ReadAllBytes(filePath);
+
+                // Tìm độ dài của phần header (ví dụ: 100 bytes)
+                int headerLength = 100; // Bạn cần xác định phần này
+
+                // Tách phần header ra khỏi dữ liệu
+                byte[] encryptedHeader = fileData.Take(headerLength).ToArray();
+                byte[] bodyAndFooterData = fileData.Skip(headerLength).ToArray();
+
+                // Giải mã phần header
+                byte[] decryptedHeader = AES.DecryptFile(encryptedHeader, key);
+
+                // Kết hợp phần header đã giải mã với phần body và footer
+                byte[] combinedData = decryptedHeader.Concat(bodyAndFooterData).ToArray();
+
+                // Ghi dữ liệu đã giải mã vào file
+                File.WriteAllBytes(decryptedFilePath, combinedData);
 
                 MessageBox.Show("File structure decrypted successfully.");
             }
@@ -55,3 +85,4 @@ namespace Group7_Module2.Service
         }
     }
 }
+
