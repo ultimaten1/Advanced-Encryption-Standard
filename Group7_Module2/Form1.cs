@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,41 +22,49 @@ namespace Group7_Module2
         public string _generatedKey { get; set; }
         public byte[] encrypted {  get; set; }
         public byte[] decrypted { get; set; }
+        public byte[] key { get; set; }
 
         private void btnEncrypt_Click(object sender, EventArgs e)
         {
-            string plainText = txtInputText.Text;
-            plainText = AES.PadPlaintext(plainText);           
-            plainText.Trim();
+            string inputFile = txtInputFile.Text;
 
-            byte[] key = Encoding.ASCII.GetBytes(_generatedKey);
-
-            byte[] input = Encoding.ASCII.GetBytes(plainText);
-            encrypted = AES.EncryptText(input, key);
-
-            // Chuyển đổi decrypted thành chuỗi plaintext
-            string encryptedPlaintext = Encoding.ASCII.GetString(encrypted);
-
-            txtEncryptText.Text = encryptedPlaintext;
+            // Thực hiện mã hóa cấu trúc tập tin
+            AESFile.EncryptFileStructure(inputFile, key);
         }
 
         private void btnDecrypt_Click(object sender, EventArgs e)
         {
-            byte[] key = Encoding.ASCII.GetBytes(_generatedKey);
+            string inputFile = txtInputFile.Text;
 
-            decrypted = AES.DecryptText(encrypted, key);
+            // Chuyển đổi đường dẫn tương đối thành đường dẫn tuyệt đối
+            inputFile = Path.GetFullPath(inputFile);
 
-            // Chuyển đổi decrypted thành chuỗi plaintext
-            string decryptedPlaintext = Encoding.ASCII.GetString(decrypted);
-
-            txtDecryptText.Text = decryptedPlaintext;
+            // Thực hiện giải mã cấu trúc tập tin
+            AESFile.DecryptFileStructure(inputFile, key);
         }
 
         private void btnGenerateKey_Click(object sender, EventArgs e)
         {
-            string generatedKey = AES.GenerateKey(16);
-            txtKey.Text = generatedKey;
-            _generatedKey = generatedKey;
+            string generatedKey = AES.GenerateKey(16);  // Generate a key of 16 bytes
+            key = Encoding.ASCII.GetBytes(generatedKey);  // Convert the string key to byte array
+
+            string hexKey = BitConverter.ToString(key).Replace("-", " ");
+
+            txtKey.Text = hexKey; // Display the hexadecimal key in the TextBox
+        }
+
+        private void btnChooseFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Open Text File";
+            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.Multiselect = false; // Only selected one file
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openFileDialog.FileName;
+                txtInputFile.Text = fileName;
+            }
         }
     }
 }
