@@ -44,7 +44,7 @@
             this.lblAES.AutoSize = true;
             this.lblAES.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAES.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblAES.Location = new System.Drawing.Point(252, 20);
+            this.lblAES.Location = new System.Drawing.Point(222, 18);
             this.lblAES.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAES.Name = "lblAES";
             this.lblAES.Size = new System.Drawing.Size(411, 26);
@@ -55,7 +55,7 @@
             // 
             this.txtInputFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtInputFile.Location = new System.Drawing.Point(44, 104);
-            this.txtInputFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtInputFile.Margin = new System.Windows.Forms.Padding(2);
             this.txtInputFile.Multiline = true;
             this.txtInputFile.Name = "txtInputFile";
             this.txtInputFile.Size = new System.Drawing.Size(564, 46);
@@ -87,7 +87,7 @@
             // 
             this.txtKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtKey.Location = new System.Drawing.Point(44, 215);
-            this.txtKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtKey.Margin = new System.Windows.Forms.Padding(2);
             this.txtKey.Multiline = true;
             this.txtKey.Name = "txtKey";
             this.txtKey.Size = new System.Drawing.Size(426, 31);
@@ -97,7 +97,7 @@
             // 
             this.btnEncrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEncrypt.Location = new System.Drawing.Point(201, 307);
-            this.btnEncrypt.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEncrypt.Margin = new System.Windows.Forms.Padding(2);
             this.btnEncrypt.Name = "btnEncrypt";
             this.btnEncrypt.Size = new System.Drawing.Size(109, 46);
             this.btnEncrypt.TabIndex = 7;
@@ -109,7 +109,7 @@
             // 
             this.btnDecrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDecrypt.Location = new System.Drawing.Point(554, 307);
-            this.btnDecrypt.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDecrypt.Margin = new System.Windows.Forms.Padding(2);
             this.btnDecrypt.Name = "btnDecrypt";
             this.btnDecrypt.Size = new System.Drawing.Size(109, 46);
             this.btnDecrypt.TabIndex = 8;
@@ -121,7 +121,7 @@
             // 
             this.btnGenerateKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenerateKey.Location = new System.Drawing.Point(653, 202);
-            this.btnGenerateKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGenerateKey.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenerateKey.Name = "btnGenerateKey";
             this.btnGenerateKey.Size = new System.Drawing.Size(125, 44);
             this.btnGenerateKey.TabIndex = 15;
@@ -133,7 +133,7 @@
             // 
             this.btnChooseFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChooseFile.Location = new System.Drawing.Point(653, 104);
-            this.btnChooseFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnChooseFile.Margin = new System.Windows.Forms.Padding(2);
             this.btnChooseFile.Name = "btnChooseFile";
             this.btnChooseFile.Size = new System.Drawing.Size(125, 44);
             this.btnChooseFile.TabIndex = 16;
@@ -145,7 +145,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(862, 418);
+            this.ClientSize = new System.Drawing.Size(879, 418);
             this.Controls.Add(this.btnChooseFile);
             this.Controls.Add(this.btnGenerateKey);
             this.Controls.Add(this.btnDecrypt);
@@ -155,7 +155,7 @@
             this.Controls.Add(this.lblInputFile);
             this.Controls.Add(this.txtInputFile);
             this.Controls.Add(this.lblAES);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmAES";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AES";

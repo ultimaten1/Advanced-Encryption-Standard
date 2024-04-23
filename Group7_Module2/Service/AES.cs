@@ -117,7 +117,7 @@ namespace Group7_Module2.Service
             return key;
         }
 
-        public static byte[] EncryptText(byte[] input, byte[] key)
+        public static byte[] EncryptFile(byte[] input, byte[] key)
         {
             int numBlocks = (int)Math.Ceiling((double)input.Length / 16);
             List<byte> encryptedBlocks = new List<byte>();
@@ -136,7 +136,7 @@ namespace Group7_Module2.Service
             return encryptedBlocks.ToArray();
         }
 
-        public static byte[] DecryptText(byte[] input, byte[] key)
+        public static byte[] DecryptFile(byte[] input, byte[] key)
         {
             int numBlocks = input.Length / 16;
             List<byte> decryptedBlocks = new List<byte>();
