@@ -19,21 +19,32 @@ namespace Group7_Module2.Service
                 // Đọc dữ liệu từ file
                 byte[] fileData = File.ReadAllBytes(filePath);
 
-                // Tìm độ dài của phần header (ví dụ: 100 bytes)
-                int headerLength = 100; // Bạn cần xác định phần này
+                if (filePath.EndsWith(".docx") || filePath.EndsWith(".xlsx") || filePath.EndsWith(".pptx"))
+                {
+                    // Mã hóa dữ liệu
+                    byte[] encryptedData = AES.EncryptFile(fileData, key);
 
-                // Tách phần header ra khỏi dữ liệu
-                byte[] headerData = fileData.Take(headerLength).ToArray();
-                byte[] bodyAndFooterData = fileData.Skip(headerLength).ToArray();
+                    // Ghi dữ liệu đã mã hóa vào file
+                    File.WriteAllBytes(encryptedFilePath, encryptedData);
+                }
+                else
+                {                 
+                    // Tìm độ dài của phần header (ví dụ: 100 bytes)
+                    int headerLength = 100; // Bạn cần xác định phần này
 
-                // Mã hóa phần header
-                byte[] encryptedHeader = AES.EncryptFile(headerData, key);
+                    // Tách phần header ra khỏi dữ liệu
+                    byte[] headerData = fileData.Take(headerLength).ToArray();
+                    byte[] bodyAndFooterData = fileData.Skip(headerLength).ToArray();
 
-                // Kết hợp phần header đã mã hóa với phần body và footer
-                byte[] combinedData = encryptedHeader.Concat(bodyAndFooterData).ToArray();
+                    // Mã hóa phần header
+                    byte[] encryptedHeader = AES.EncryptFile(headerData, key);
 
-                // Ghi dữ liệu đã mã hóa vào file
-                File.WriteAllBytes(encryptedFilePath, combinedData);
+                    // Kết hợp phần header đã mã hóa với phần body và footer
+                    byte[] combinedData = encryptedHeader.Concat(bodyAndFooterData).ToArray();
+
+                    // Ghi dữ liệu đã mã hóa vào file
+                    File.WriteAllBytes(encryptedFilePath, combinedData);
+                }
 
                 MessageBox.Show("File structure encrypted successfully.");
             }
@@ -60,21 +71,32 @@ namespace Group7_Module2.Service
                 // Đọc dữ liệu từ file đã mã hóa
                 byte[] fileData = File.ReadAllBytes(filePath);
 
-                // Tìm độ dài của phần header (ví dụ: 100 bytes)
-                int headerLength = 100; // Bạn cần xác định phần này
+                if (filePath.EndsWith(".docx") || filePath.EndsWith(".xlsx") || filePath.EndsWith(".pptx"))
+                {
+                    // Giải mã dữ liệu
+                    byte[] decryptedData = AES.DecryptFile(fileData, key);
 
-                // Tách phần header ra khỏi dữ liệu
-                byte[] encryptedHeader = fileData.Take(headerLength).ToArray();
-                byte[] bodyAndFooterData = fileData.Skip(headerLength).ToArray();
+                    // Ghi dữ liệu đã giải mã vào file
+                    File.WriteAllBytes(decryptedFilePath, decryptedData);
+                }
+                else
+                {
+                    // Tìm độ dài của phần header (ví dụ: 100 bytes)
+                    int headerLength = 100; // Bạn cần xác định phần này
 
-                // Giải mã phần header
-                byte[] decryptedHeader = AES.DecryptFile(encryptedHeader, key);
+                    // Tách phần header ra khỏi dữ liệu
+                    byte[] encryptedHeader = fileData.Take(headerLength).ToArray();
+                    byte[] bodyAndFooterData = fileData.Skip(headerLength).ToArray();
 
-                // Kết hợp phần header đã giải mã với phần body và footer
-                byte[] combinedData = decryptedHeader.Concat(bodyAndFooterData).ToArray();
+                    // Giải mã phần header
+                    byte[] decryptedHeader = AES.DecryptFile(encryptedHeader, key);
 
-                // Ghi dữ liệu đã giải mã vào file
-                File.WriteAllBytes(decryptedFilePath, combinedData);
+                    // Kết hợp phần header đã giải mã với phần body và footer
+                    byte[] combinedData = decryptedHeader.Concat(bodyAndFooterData).ToArray();
+
+                    // Ghi dữ liệu đã giải mã vào file
+                    File.WriteAllBytes(decryptedFilePath, combinedData);
+                }           
 
                 MessageBox.Show("File structure decrypted successfully.");
             }
