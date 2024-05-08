@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,49 +74,93 @@ namespace Group7_Module2.Service
             return byteArray;
         }
 
+        //public static string PadPlaintext(string plaintext)
+        //{
+        //    int paddingLength = 16 - (plaintext.Length % 16); // Tính toán số lượng kí tự cần thêm vào
+        //    string paddedPlaintext = plaintext.PadRight(plaintext.Length + paddingLength, ' '); // Thêm kí tự "x" vào cuối chuỗi
+        //    return paddedPlaintext;
+        //}
+
         public static string PadPlaintext(string plaintext)
         {
-            int paddingLength = 16 - (plaintext.Length % 16); // Tính toán số lượng kí tự cần thêm vào
-            string paddedPlaintext = plaintext.PadRight(plaintext.Length + paddingLength, ' '); // Thêm kí tự "x" vào cuối chuỗi
+            int paddingLength = 16 - (plaintext.Length % 16); // Tính toán số lượng byte cần thêm vào
+            char paddingChar = (char)paddingLength; // Sử dụng giá trị padding là độ dài của padding
+            string paddedPlaintext = plaintext.PadRight(plaintext.Length + paddingLength, paddingChar); // Thêm padding vào cuối chuỗi
             return paddedPlaintext;
         }
 
-        public static string GenerateKey(int bytes)
+
+        //public static string GenerateKey(int bytes)
+        //{
+        //    char[] letters = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'y', 'x', 'z' };
+        //    char[] lettersUpper = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'X', 'Z' };
+        //    char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        //    char[] symbols = new char[] { '!', '@', '#', '$', '%', '&', '*', '=', ']', '[', '/', '+', '~' };
+        //    string key = string.Empty;
+
+        //    Random rand = new Random();
+
+        //    for (int i = 0; i < bytes; ++i)
+        //    {
+        //        int random = rand.Next(4);
+        //        if (random == 0)
+        //        {
+        //            int slot = rand.Next(26);
+        //            key += letters[slot];
+        //        }
+        //        else if (random == 1)
+        //        {
+        //            int slot = rand.Next(10);
+        //            key += numbers[slot];
+        //        }
+        //        else if (random == 2)
+        //        {
+        //            int slot = rand.Next(26);
+        //            key += lettersUpper[slot];
+        //        }
+        //        else
+        //        {
+        //            int slot = rand.Next(13);
+        //            key += symbols[slot];
+        //        }
+        //    }
+        //    return key;
+        //}
+
+        public static byte[] GenerateKey(int keySize)
         {
-            char[] letters = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'y', 'x', 'z' };
-            char[] lettersUpper = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'X', 'Z' };
-            char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            char[] symbols = new char[] { '!', '@', '#', '$', '%', '&', '*', '=', ']', '[', '/', '+', '~' };
-            string key = string.Empty;
-
-            Random rand = new Random();
-
-            for (int i = 0; i < bytes; ++i)
+            // Tạo đối tượng RNGCryptoServiceProvider
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
             {
-                int random = rand.Next(4);
-                if (random == 0)
-                {
-                    int slot = rand.Next(26);
-                    key += letters[slot];
-                }
-                else if (random == 1)
-                {
-                    int slot = rand.Next(10);
-                    key += numbers[slot];
-                }
-                else if (random == 2)
-                {
-                    int slot = rand.Next(26);
-                    key += lettersUpper[slot];
-                }
-                else
-                {
-                    int slot = rand.Next(13);
-                    key += symbols[slot];
-                }
+                // Tạo mảng byte để lưu trữ khóa
+                byte[] key = new byte[keySize / 8];
+
+                // Sinh ngẫu nhiên các giá trị cho mảng key
+                rng.GetBytes(key);
+
+                // Trả về khóa đã tạo
+                return key;
             }
-            return key;
         }
+
+        //public static byte[] EncryptFile(byte[] input, byte[] key)
+        //{
+        //    int numBlocks = (int)Math.Ceiling((double)input.Length / 16);
+        //    List<byte> encryptedBlocks = new List<byte>();
+
+        //    for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
+        //    {
+        //        int startIndex = blockIndex * 16;
+        //        int length = Math.Min(16, input.Length - startIndex);
+        //        byte[] block = new byte[16];
+        //        Array.Copy(input, startIndex, block, 0, length);
+
+        //        byte[] encryptedBlock = EncryptBlock(block, key);
+        //        encryptedBlocks.AddRange(encryptedBlock);
+        //    }
+
+        //    return encryptedBlocks.ToArray();
+        //}
 
         public static byte[] EncryptFile(byte[] input, byte[] key)
         {
@@ -129,12 +174,40 @@ namespace Group7_Module2.Service
                 byte[] block = new byte[16];
                 Array.Copy(input, startIndex, block, 0, length);
 
+                // Add PKCS7 padding to the last block if needed
+                if (length < 16)
+                {
+                    byte paddingLength = (byte)(16 - length);
+                    for (int i = length; i < 16; i++)
+                    {
+                        block[i] = paddingLength;
+                    }
+                }
+
                 byte[] encryptedBlock = EncryptBlock(block, key);
                 encryptedBlocks.AddRange(encryptedBlock);
             }
 
             return encryptedBlocks.ToArray();
         }
+
+        //public static byte[] DecryptFile(byte[] input, byte[] key)
+        //{
+        //    int numBlocks = input.Length / 16;
+        //    List<byte> decryptedBlocks = new List<byte>();
+
+        //    for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
+        //    {
+        //        int startIndex = blockIndex * 16;
+        //        byte[] block = new byte[16];
+        //        Array.Copy(input, startIndex, block, 0, 16);
+
+        //        byte[] decryptedBlock = DecryptBlock(block, key);
+        //        decryptedBlocks.AddRange(decryptedBlock);
+        //    }
+
+        //    return decryptedBlocks.ToArray();
+        //}
 
         public static byte[] DecryptFile(byte[] input, byte[] key)
         {
@@ -144,11 +217,24 @@ namespace Group7_Module2.Service
             for (int blockIndex = 0; blockIndex < numBlocks; blockIndex++)
             {
                 int startIndex = blockIndex * 16;
-                byte[] block = new byte[16];
-                Array.Copy(input, startIndex, block, 0, 16);
+                if (startIndex + 16 <= input.Length)
+                {
+                    byte[] block = new byte[16];
+                    Array.Copy(input, startIndex, block, 0, 16);
 
-                byte[] decryptedBlock = DecryptBlock(block, key);
-                decryptedBlocks.AddRange(decryptedBlock);
+                    byte[] decryptedBlock = DecryptBlock(block, key);
+                    decryptedBlocks.AddRange(decryptedBlock);
+                }
+            }
+
+            // Remove PKCS7 padding from the last block if needed
+            if (decryptedBlocks.Count > 0)
+            {
+                int paddingLength = decryptedBlocks[decryptedBlocks.Count - 1];
+                if (paddingLength <= decryptedBlocks.Count)
+                {
+                    decryptedBlocks.RemoveRange(decryptedBlocks.Count - paddingLength, paddingLength);
+                }
             }
 
             return decryptedBlocks.ToArray();
@@ -248,6 +334,43 @@ namespace Group7_Module2.Service
             return output;
         }
 
+        //public static byte[,] KeyExpansion(byte[] key)
+        //{
+        //    byte[,] expandedKey = new byte[4, 44];
+        //    byte[] temp = new byte[4];
+        //    int round = 0;
+
+        //    // Copy key to the first 4 columns of expandedKey
+        //    for (int i = 0; i < 4; i++)
+        //    {
+        //        for (int j = 0; j < 4; j++)
+        //        {
+        //            expandedKey[j, i] = key[i * 4 + j];
+        //        }
+        //    }
+
+        //    for (int col = 4; col < 44; col++)
+        //    {
+        //        if (col % 4 == 0)
+        //        {
+        //            temp = SubWord(RotWord(expandedKey, col - 1));
+        //            temp[0] ^= Rcon[round];
+        //            round++;
+        //        }
+        //        else if (col % 4 == 0 && col % 4 == 4)  // Remove this condition as it is redundant
+        //        {
+        //            temp = SubWord(expandedKey);  // Remove col - 1 as it's not needed
+        //        }
+
+        //        for (int row = 0; row < 4; row++)
+        //        {
+        //            expandedKey[row, col] = (byte)(expandedKey[row, col - 4] ^ temp[row]);
+        //        }
+        //    }
+
+        //    return expandedKey;
+        //}
+
         public static byte[,] KeyExpansion(byte[] key)
         {
             byte[,] expandedKey = new byte[4, 44];
@@ -270,10 +393,6 @@ namespace Group7_Module2.Service
                     temp = SubWord(RotWord(expandedKey, col - 1));
                     temp[0] ^= Rcon[round];
                     round++;
-                }
-                else if (col % 4 == 0 && col % 4 == 4)  // Remove this condition as it is redundant
-                {
-                    temp = SubWord(expandedKey);  // Remove col - 1 as it's not needed
                 }
 
                 for (int row = 0; row < 4; row++)
@@ -316,17 +435,12 @@ namespace Group7_Module2.Service
 
             for (int i = 0; i < 4; i++)
             {
-                temp[0, i] = key[i, col - 1];
+                temp[0, i] = key[0, (col + i) % 4];
             }
-
-            byte first = temp[0, 0];
-            temp[0, 0] = temp[0, 1];
-            temp[0, 1] = temp[0, 2];
-            temp[0, 2] = temp[0, 3];
-            temp[0, 3] = first;
 
             return temp;
         }
+
 
         public static byte[] RotWord(byte[] key)
         {
