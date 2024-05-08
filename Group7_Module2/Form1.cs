@@ -29,7 +29,7 @@ namespace Group7_Module2
             string inputFile = txtInputFile.Text;
 
             // Thực hiện mã hóa cấu trúc tập tin
-            AESFile.EncryptFileStructure(inputFile, key);
+            AESFile.EncryptFileStructure(inputFile, key, 100);
         }
 
         private void btnDecrypt_Click(object sender, EventArgs e)
@@ -45,19 +45,19 @@ namespace Group7_Module2
 
         private void btnGenerateKey_Click(object sender, EventArgs e)
         {
-            string generatedKey = AES.GenerateKey(16);  // Generate a key of 16 bytes
-            key = Encoding.ASCII.GetBytes(generatedKey);  // Convert the string key to byte array
+            //string generatedKey = AES.GenerateKey(16);  // Generate a key of 16 bytes
+            //key = Encoding.ASCII.GetBytes(generatedKey);  // Convert the string key to byte array
 
+            key = AES.GenerateKey(128); // Generate a key of 16 bytes
             string hexKey = BitConverter.ToString(key).Replace("-", " ");
-
             txtKey.Text = hexKey; // Display the hexadecimal key in the TextBox
         }
 
         private void btnChooseFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Open Text File";
-            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.Title = "Open file";
+            openFileDialog.Filter = "All files (*.*)|*.*";
             openFileDialog.Multiselect = false; // Only selected one file
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
